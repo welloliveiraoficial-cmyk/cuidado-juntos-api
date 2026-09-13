@@ -1,0 +1,9 @@
+{
+  "name": "cuidado-juntos-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API de notificações push do app Cuidado Juntos, hospedada na Vercel.",
+  "dependencies": {
+    "firebase-admin": "^12.1.0"
+  }
+}
