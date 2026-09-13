@@ -37,7 +37,39 @@ const MEDICAMENTOS = {
   "00:00": ["Levetiracetam"]
 };
 
+/*
+ * CORS
+ * O site (GitHub Pages) e esta API (Vercel) ficam em
+ * domínios diferentes, então o navegador manda uma
+ * requisição "OPTIONS" de verificação antes do POST de
+ * verdade (preflight). Sem responder a ela com os
+ * cabeçalhos corretos, o navegador cancela o POST real
+ * e a notificação nunca chega a ser enviada.
+ */
+
+function aplicarCORS(req, res) {
+
+  res.setHeader("Access-Control-Allow-Origin", "*");
+
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
+
+}
+
 module.exports = async function handler(req, res) {
+
+  aplicarCORS(req, res);
+
+  /*
+   * Requisição de verificação do navegador: responder
+   * "ok" sem exigir autenticação nem rodar nenhuma lógica.
+   */
+
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
 
   if (req.method !== "POST") {
     res.status(405).json({ erro: "Método não permitido" });
@@ -122,3 +154,4 @@ module.exports = async function handler(req, res) {
   }
 
 };
+         
