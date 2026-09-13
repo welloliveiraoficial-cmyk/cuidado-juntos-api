@@ -25,18 +25,6 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-const MEDICAMENTOS = {
-  "08:00": ["Sertralina", "Levetiracetam"],
-  "09:00": ["Losartana", "Quetiapina"],
-  "10:00": ["Clopidogrel"],
-  "12:00": ["Rivaroxabana"],
-  "16:00": ["Levetiracetam"],
-  "20:00": ["Atorvastatina"],
-  "21:00": ["Losartana", "Quetiapina"],
-  "22:00": ["Clonazepam"],
-  "00:00": ["Levetiracetam"]
-};
-
 /*
  * CORS
  * O site (GitHub Pages) e esta API (Vercel) ficam em
@@ -109,16 +97,10 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    const remedios = MEDICAMENTOS[horario];
-
-    const listaRemedios = Array.isArray(remedios) && remedios.length
-      ? remedios.join(", ")
-      : "medicamento";
-
     const mensagem = {
       notification: {
         title: "Cuidado Juntos",
-        body: `${nome || "Alguém"} registrou ${listaRemedios} das ${horario}.`
+        body: `${nome || "Alguém"} deu o remédio das ${horario}.`
       },
       tokens: tokens
     };
@@ -154,4 +136,3 @@ module.exports = async function handler(req, res) {
   }
 
 };
-         
