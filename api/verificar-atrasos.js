@@ -210,8 +210,13 @@ module.exports = async function handler(req, res) {
           ? remedios.join(", ")
           : "medicamento";
 
+        /*
+         * "data" em vez de "notification" — mesma razão do
+         * notificar-registro.js: evita o aviso duplicado.
+         */
+
         const mensagem = {
-          notification: {
+          data: {
             title: "Cuidado Juntos ⏰",
             body: `O horário das ${horario} (${listaRemedios}) ainda não foi registrado.`
           },
