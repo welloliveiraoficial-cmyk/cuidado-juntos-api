@@ -107,6 +107,9 @@ module.exports = async function handler(req, res) {
      */
 
     const mensagem = {
+      android: {
+        priority: "high"
+      },
       data: {
         title: "Cuidado Juntos",
         body: `${nome || "Alguém"} deu o remédio das ${horario}.`
