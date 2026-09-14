@@ -180,11 +180,15 @@ module.exports = async function handler(req, res) {
 
       const refAviso = db.collection("avisosAtraso").doc(idAviso);
 
-      const jaAvisado = await refAviso.get();
-
-      if (jaAvisado.exists) {
-        continue;
-      }
+      /*
+       * Antes: se já existia um aviso pra esse horário, pulava
+       * pra não repetir. Agora, por pedido do usuário, o aviso
+       * repete a cada execução (a cada 10 min) até o horário
+       * ser registrado — só paramos de entrar aqui quando
+       * "registrados.has(horario)" vira true, lá em cima.
+       * Mantemos o registro em "avisosAtraso" só como histórico
+       * de quando cada aviso foi mandado, sem usar pra bloquear.
+       */
 
       if (!tokensCache) {
 
@@ -219,8 +223,9 @@ module.exports = async function handler(req, res) {
       }
 
       await refAviso.set({
-        criadoEm: admin.firestore.FieldValue.serverTimestamp()
-      });
+        ultimoEnvioEm: admin.firestore.FieldValue.serverTimestamp(),
+        vezesAvisado: admin.firestore.FieldValue.increment(1)
+      }, { merge: true });
 
       avisadosAgora.push(horario);
 
