@@ -97,8 +97,17 @@ module.exports = async function handler(req, res) {
       return;
     }
 
+    /*
+     * IMPORTANTE: mandamos só "data" (não "notification").
+     * Se mandássemos "notification", o Chrome/Android exibe
+     * um aviso automático genérico por conta própria, ALÉM
+     * do aviso que o nosso sw.js mostra manualmente — daí a
+     * notificação aparecia duplicada. Com "data", só o nosso
+     * código (com o ícone certo) exibe o aviso.
+     */
+
     const mensagem = {
-      notification: {
+      data: {
         title: "Cuidado Juntos",
         body: `${nome || "Alguém"} deu o remédio das ${horario}.`
       },
