@@ -26,7 +26,7 @@ const db = admin.firestore();
 
 const HORARIOS = [
   "08:00", "09:00", "10:00", "12:00", "16:00",
-  "20:00", "21:00", "22:00", "00:00"
+  "20:00", "21:00", "22:00", "00:00", "19:40"
 ];
 
 const MEDICAMENTOS = {
@@ -38,7 +38,8 @@ const MEDICAMENTOS = {
   "20:00": ["Atorvastatina"],
   "21:00": ["Losartana", "Quetiapina"],
   "22:00": ["Clonazepam"],
-  "00:00": ["Levetiracetam"]
+  "00:00": ["Levetiracetam"],
+  "19:40": ["Teste"]
 };
 
 const MINUTOS_TOLERANCIA = 30;
