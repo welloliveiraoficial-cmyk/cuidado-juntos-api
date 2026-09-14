@@ -219,7 +219,7 @@ module.exports = async function handler(req, res) {
         const mensagem = {
           data: {
             title: "Cuidado Juntos ⏰",
-            body: `O horário das ${horario} (${listaRemedios}) ainda não foi registrado.`
+            body: `O remédio das ${horario} (${listaRemedios}) não foi dado para Josefa.`
           },
           tokens: tokensCache
         };
