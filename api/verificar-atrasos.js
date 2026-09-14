@@ -217,6 +217,9 @@ module.exports = async function handler(req, res) {
          */
 
         const mensagem = {
+          android: {
+            priority: "high"
+          },
           data: {
             title: "Cuidado Juntos ⏰",
             body: `O remédio das ${horario} (${listaRemedios}) não foi dado para Josefa.`
