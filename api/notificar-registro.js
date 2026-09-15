@@ -117,7 +117,7 @@ module.exports = async function handler(req, res) {
       android: {
         priority: "high",
         notification: {
-          title: "Cuidado Juntos",
+          title: "Cuidando Juntos",
           body: `${nome || "Alguém"} deu o remédio das ${horario}.`,
           channelId: "avisos_familia",
           icon: "notificacao"
@@ -129,7 +129,7 @@ module.exports = async function handler(req, res) {
         }
       },
       data: {
-        title: "Cuidado Juntos",
+        title: "Cuidando Juntos",
         body: `${nome || "Alguém"} deu o remédio das ${horario}.`
       },
       tokens: tokens
