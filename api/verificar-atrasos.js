@@ -222,7 +222,7 @@ module.exports = async function handler(req, res) {
           android: {
             priority: "high",
             notification: {
-              title: "Cuidado Juntos ⏰",
+              title: "Cuidando Juntos ⏰",
               body: `O remédio das ${horario} (${listaRemedios}) não foi dado para Josefa.`,
               channelId: "avisos_familia",
               icon: "notificacao"
@@ -234,7 +234,7 @@ module.exports = async function handler(req, res) {
             }
           },
           data: {
-            title: "Cuidado Juntos ⏰",
+            title: "Cuidando Juntos ⏰",
             body: `O remédio das ${horario} (${listaRemedios}) não foi dado para Josefa.`
           },
           tokens: tokensCache
