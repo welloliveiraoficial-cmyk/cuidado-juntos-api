@@ -98,17 +98,30 @@ module.exports = async function handler(req, res) {
     }
 
     /*
-     * IMPORTANTE: mandamos só "data" (não "notification").
-     * Se mandássemos "notification", o Chrome/Android exibe
-     * um aviso automático genérico por conta própria, ALÉM
-     * do aviso que o nosso sw.js mostra manualmente — daí a
-     * notificação aparecia duplicada. Com "data", só o nosso
-     * código (com o ícone certo) exibe o aviso.
+     * IMPORTANTE: mandamos "data" pra todo mundo (não
+     * "notification" solto) — se mandássemos "notification"
+     * no topo, o Chrome/Android exibiria um aviso automático
+     * genérico ALÉM do aviso que o nosso código mostra
+     * manualmente, duplicando.
+     *
+     * O bloco "android.notification" abaixo é diferente: ele
+     * só é entendido por tokens de app Android nativo (o
+     * nosso APK) — tokens Web simplesmente ignoram esse bloco
+     * e continuam funcionando exatamente como antes, só com
+     * "data". É graças a esse bloco que o Android consegue
+     * mostrar o aviso sozinho mesmo com o APK completamente
+     * fechado, sem precisar do app rodando.
      */
 
     const mensagem = {
       android: {
-        priority: "high"
+        priority: "high",
+        notification: {
+          title: "Cuidado Juntos",
+          body: `${nome || "Alguém"} deu o remédio das ${horario}.`,
+          channelId: "avisos_familia",
+          icon: "notificacao"
+        }
       },
       webpush: {
         headers: {
