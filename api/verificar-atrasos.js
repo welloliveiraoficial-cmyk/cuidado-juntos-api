@@ -220,6 +220,11 @@ module.exports = async function handler(req, res) {
           android: {
             priority: "high"
           },
+          webpush: {
+            headers: {
+              Urgency: "high"
+            }
+          },
           data: {
             title: "Cuidado Juntos ⏰",
             body: `O remédio das ${horario} (${listaRemedios}) não foi dado para Josefa.`
