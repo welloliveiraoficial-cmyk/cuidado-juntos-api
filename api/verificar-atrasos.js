@@ -212,13 +212,22 @@ module.exports = async function handler(req, res) {
           : "medicamento";
 
         /*
-         * "data" em vez de "notification" — mesma razão do
-         * notificar-registro.js: evita o aviso duplicado.
+         * "data" pra todo mundo — mesma razão do
+         * notificar-registro.js. O bloco "android.notification"
+         * só é entendido pelos tokens do APK nativo (tokens Web
+         * ignoram e seguem só com "data"), e é o que permite o
+         * Android mostrar o aviso sozinho com o app fechado.
          */
 
         const mensagem = {
           android: {
-            priority: "high"
+            priority: "high",
+            notification: {
+              title: "Cuidado Juntos ⏰",
+              body: `O remédio das ${horario} (${listaRemedios}) não foi dado para Josefa.`,
+              channelId: "avisos_familia",
+              icon: "notificacao"
+            }
           },
           webpush: {
             headers: {
