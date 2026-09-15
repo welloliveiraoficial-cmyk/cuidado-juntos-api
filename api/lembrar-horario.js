@@ -44,13 +44,16 @@ const MEDICAMENTOS = {
 };
 
 /*
- * Janela em que o horário é considerado "chegou agora":
- * de 0 até 9 minutos depois do horário exato. Como o
- * GitHub Actions roda a cada 10 min, isso garante que o
- * aviso dispare uma vez só, na primeira execução depois do
- * horário bater.
+ * Janela em que o horário ainda é considerado "chegando
+ * agora": de 0 até 24 minutos depois do horário exato
+ * (sempre antes dos 30 min que viram "atrasado"). O
+ * GitHub Actions roda a cada 10 min, mas agendamentos
+ * podem atrasar alguns minutos — uma janela maior evita
+ * que o lembrete seja perdido por causa desse atraso.
+ * A coleção avisosHorario garante que, mesmo rodando
+ * várias vezes dentro da janela, o aviso só sai uma vez.
  */
-const JANELA_MINUTOS = 10;
+const JANELA_MINUTOS = 25;
 
 /*
  * Pega a hora/minuto/data de agora já no fuso de Brasília,
@@ -148,7 +151,27 @@ module.exports = async function handler(req, res) {
 
     const dataISO = obterDataISOCiclo(agora);
 
+    const snapshotRegistros = await db.collection("registros")
+      .where("dataISO", "==", dataISO)
+      .get();
+
+    const registrados = new Set();
+
+    snapshotRegistros.forEach(function (docSnap) {
+
+      const dado = docSnap.data();
+
+      if (dado && dado.horario) {
+        registrados.add(dado.horario);
+      }
+
+    });
+
     const chegando = HORARIOS.filter(function (horario) {
+
+      if (registrados.has(horario)) {
+        return false;
+      }
 
       const diferenca = minutosDesdeHorario(horario, agora);
 
