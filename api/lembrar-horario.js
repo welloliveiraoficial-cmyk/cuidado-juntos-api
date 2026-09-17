@@ -3,11 +3,10 @@
    LEMBRAR HORÁRIO
    Chamada periodicamente pelo GitHub Actions (a cada 10
    minutos), junto com /api/verificar-atrasos. Avisa a
-   família assim que um horário chega (dentro dos primeiros
-   10 minutos), mesmo antes de virar atraso — diferente do
-   /api/verificar-atrasos, que só avisa depois de 30 min sem
-   registro. Cada horário avisa só uma vez por dia (controle
-   pela coleção avisosHorario).
+   família assim que um horário chega, mesmo antes de virar
+   atraso — diferente do /api/verificar-atrasos, que só
+   avisa depois de 30 min sem registro. Cada horário avisa
+   só uma vez por dia (controle pela coleção avisosHorario).
 ========================================================= */
 
 const admin = require("firebase-admin");
@@ -44,16 +43,17 @@ const MEDICAMENTOS = {
 };
 
 /*
- * Janela em que o horário ainda é considerado "chegando
- * agora": de 0 até 24 minutos depois do horário exato
- * (sempre antes dos 30 min que viram "atrasado"). O
- * GitHub Actions roda a cada 10 min, mas agendamentos
- * podem atrasar alguns minutos — uma janela maior evita
- * que o lembrete seja perdido por causa desse atraso.
- * A coleção avisosHorario garante que, mesmo rodando
- * várias vezes dentro da janela, o aviso só sai uma vez.
+ * Antes: só avisava dentro de uma janela fechada de 25
+ * minutos depois do horário exato. Se o GitHub Actions
+ * atrasasse pra rodar (comum, roda em "melhor esforço") e
+ * passasse desses 25 minutos, a janela fechava e o aviso
+ * nunca mais saía naquele dia — mesmo com o horário ainda
+ * pendente. Agora, igual ao /api/verificar-atrasos, o
+ * lembrete não tem mais prazo de validade: continua valendo
+ * a partir do horário exato até o remédio ser registrado.
+ * A coleção avisosHorario garante que, mesmo rodando várias
+ * vezes, o aviso só sai uma vez por horário.
  */
-const JANELA_MINUTOS = 25;
 
 /*
  * Pega a hora/minuto/data de agora já no fuso de Brasília,
@@ -173,9 +173,7 @@ module.exports = async function handler(req, res) {
         return false;
       }
 
-      const diferenca = minutosDesdeHorario(horario, agora);
-
-      return diferenca >= 0 && diferenca < JANELA_MINUTOS;
+      return minutosDesdeHorario(horario, agora) >= 0;
 
     });
 
