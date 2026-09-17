@@ -211,7 +211,18 @@ module.exports = async function handler(req, res) {
 
       }
 
-      if (tokensCache.length > 0) {
+      if (tokensCache.length === 0) {
+        /*
+         * Nenhum aparelho cadastrado ainda para receber avisos.
+         * NÃO marca como enviado — assim, quando um aparelho
+         * cadastrar o token (ex.: alguém ativa as notificações),
+         * o aviso deste horário ainda pode sair, em vez de ficar
+         * perdido pro resto do dia.
+         */
+        continue;
+      }
+
+      {
 
         const remedios = MEDICAMENTOS[horario];
 
